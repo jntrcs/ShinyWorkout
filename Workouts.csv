@@ -1,19 +1,19 @@
-Workout,Min,Max,Intensity,Muscle_Category,Type
-Push ups,20,40,100,Chest,Reps
-Crunches,30,60,80,Abs,Reps
-Butterflies,8,12,75,Chest,Reps
-Curls (shortest setting),8,12,80,Biceps,Reps
-Curls (longest setting),8,12,70,Biceps,Reps
-Plank,35,60,85,Abs,Time
-Raised feet push ups,12,20,85,Chest,Reps
-Squats,8,13,60,Legs,Reps
-Lunges (both sides),8,10,65,Legs,Reps
-Tricep Curl,8,12,75,Arms,Reps
-Trex Crunches,10,15,80,Abs,Reps
-Trex Crunches and Push-ups,8,15,110,Chest,Reps
-High Knees,90,150,80,Warmup,Time
-Butt Kickers,90,150,80,Warmup,Time
-Normal Jog,120,240,75,Warmup,Time
-Jumping Jacks,90,150,85,Warmup,Time
-Side Abs,60,100,75,Abs,Reps
-Trex pull ups,10,15,70,Chest,Reps
+Workout,Min,Max,Intensity,Muscle_Category,Type,Archived
+Push ups,20,40,100,Chest,Reps,FALSE
+Crunches,30,60,80,Abs,Reps,FALSE
+Butterflies,8,12,75,Chest,Reps,FALSE
+Curls (shortest setting),8,12,80,Biceps,Reps,FALSE
+Curls (longer setting),8,12,70,Biceps,Reps,FALSE
+Plank,35,60,85,Abs,Time,FALSE
+Raised feet push ups,12,20,85,Chest,Reps,FALSE
+Squats,8,13,60,Legs,Reps,FALSE
+Lunges (both sides),8,10,65,Legs,Reps,FALSE
+Tricep Curl,8,12,75,Arms,Reps,FALSE
+Trex Crunches,10,15,80,Abs,Reps,FALSE
+Trex Crunches and Push-ups,8,15,110,Chest,Reps,FALSE
+High Knees,90,150,80,Warmup,Time,FALSE
+Butt Kickers,90,150,80,Warmup,Time,FALSE
+Normal Jog,120,240,75,Warmup,Time,FALSE
+Jumping Jacks,90,150,85,Warmup,Time,FALSE
+Side Abs,60,100,75,Abs,Reps,FALSE
+Trex pull ups,10,15,70,Chest,Reps,FALSE

@@ -10,7 +10,7 @@
 library(shiny)
 library(tidyverse)
 library(shinyjs)
-workouts = read_csv("Workouts.csv")
+workouts = read_csv("Workouts.csv") %>% filter(!Archived)
 warmups = workouts %>% filter(Muscle_Category=="Warmup")
 exercises= workouts %>% filter(!Muscle_Category=="Warmup")
 
@@ -49,8 +49,14 @@ ui <- fluidPage(
                  uiOutput("WorkoutInstructions"),
                  uiOutput("WorkoutButtons"),
                  tableOutput("WorkoutTable"),
+                 textOutput("SavedMessage"),
                  uiOutput("EndWorkout")),
-        tabPanel(title="Analysis"))
+        tabPanel(title="Analysis", 
+                 checkboxGroupInput("MuscleGroups", "Included Muscles", choices = unique(workouts$Muscle_Category),
+                                    selected=unique(workouts$Muscle_Category), inline=T, width="100%"),
+                 plotOutput("Performance")
+                 )
+        )
 
     # Sidebar with a slider input for number of bins 
 
@@ -61,6 +67,7 @@ server <- function(input, output, session) {
 
     shinyjs::hide("WorkoutButtons")
     shinyjs::hide("WorkoutInstructions")
+    hide("SavedMessage")
     hide("EndWorkout")
     
     current_workout<-reactiveVal()
@@ -76,6 +83,13 @@ server <- function(input, output, session) {
         shinyjs::show(id="WorkoutButtons")
         shinyjs::show(id="WorkoutInstructions")
         shinyjs::hide("Unpause")
+        hide("SaveWorkout")
+        hide("SavedMessage")
+        seconds_paused(0)
+        previous_pause_lengths(0)
+        paused(FALSE)
+        pause_time(NULL)
+        unpause_time(NULL)
         current_workout(tibble(Workout=character(), Intensity=numeric(), Muscle_Category=character(),
                                Duration = numeric(),
                                Difficulty=numeric(), Points=numeric()))
@@ -152,16 +166,48 @@ server <- function(input, output, session) {
         end_workout()
     })
     
+    output$SavedMessage<-renderText({"Saved!"})
+    
     output$EndWorkout<-renderUI({
-        actionButton("SaveWorkout", "Save Workout")
+        list(actionButton("SaveWorkout", "Save Workout"))
     })
     
-    end_workout<-reactive({
+    end_workout<-function(){
         hide("WorkoutButtons")
         hide("WorkoutInstructions")
         show("EndWorkout")
         show("NewWorkout")
+        show("SaveWorkout")
+    }
+    
+    observeEvent(input$SaveWorkout, {
+        hide("SaveWorkout")
+        show("SavedMessage")
+        all_workouts = read_csv("WorkoutHistory.csv")
+        all_workouts %>% bind_rows(
+            current_workout() %>% mutate(ID = sample.int(200000000, 1),
+                                       Date=Sys.Date(),
+                                       Workout = Workout, 
+                                       Duration = Duration,
+                                       Difficulty = Difficulty, .keep="none")
+        ) %>% write_csv("WorkoutHistory.csv")
+
     })
+    
+    output$Performance<-renderPlot({
+        workout_history = 
+            read_csv("WorkoutHistory.csv") %>% drop_na() %>%
+            left_join(workouts) %>%
+            mutate(Points = Difficulty * Intensity) %>%
+            filter(Muscle_Category %in% input$MuscleGroups)
+        ggplot(workout_history, aes(x=Date, y=Points, fill=Muscle_Category))+
+            geom_col()+
+            scale_fill_discrete(NULL)+
+            theme_minimal()+
+            xlab(NULL)+
+            ylab("Intensity")
+    })
+    
 
    
 }
