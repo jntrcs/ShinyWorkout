@@ -16,8 +16,11 @@ exercises= workouts %>% filter(!Muscle_Category=="Warmup")
 
 choose_new_exercise <- function(current_workout, last_category=NULL){
     #Every week from the debut, I want the upper limits of the workout to increase by 4%
+    
+    if(nrow(current_workout>=2)){
     weekly_multiplier =
         1+as.numeric(difftime(Sys.Date(), lubridate::ymd("2021-03-27"), units="days"))/7 * .04
+    }else weekly_multiplier=1
     
     difficulty = runif(1) * weekly_multiplier
     if (nrow(current_workout)<2){
