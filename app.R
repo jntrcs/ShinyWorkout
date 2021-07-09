@@ -19,7 +19,7 @@ choose_new_exercise <- function(current_workout, last_category=NULL){
     
     if(nrow(current_workout)>=2){
     weekly_multiplier =
-        1+as.numeric(difftime(Sys.Date(), lubridate::ymd("2021-03-27"), units="days"))/7 * .04
+        1+as.numeric(difftime(Sys.Date(), lubridate::ymd("2021-03-27"), units="days"))/7 * .02
     }else weekly_multiplier=1
     
     difficulty = runif(1) * weekly_multiplier
@@ -203,8 +203,9 @@ server <- function(input, output, session) {
             left_join(workouts) %>%
             mutate(Points = Difficulty * Intensity) %>%
             filter(Muscle_Category %in% input$MuscleGroups)
-        ggplot(workout_history, aes(x=Date, y=Points, fill=Muscle_Category))+
-            geom_col()+
+        ggplot(workout_history, aes(x=Date, y=Points))+
+            geom_col(aes(fill=Muscle_Category))+
+            geom_smooth(data=~.x %>% group_by(Date) %>% summarize(Points=sum(Points)))+
             scale_fill_discrete(NULL)+
             theme_minimal()+
             xlab(NULL)+
