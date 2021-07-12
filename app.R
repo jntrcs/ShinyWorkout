@@ -52,6 +52,7 @@ ui <- fluidPage(
                  uiOutput("WorkoutInstructions"),
                  uiOutput("WorkoutButtons"),
                  tableOutput("WorkoutTable"),
+                 uiOutput("Total"),
                  textOutput("SavedMessage"),
                  uiOutput("EndWorkout")),
         tabPanel(title="Analysis", 
@@ -129,6 +130,10 @@ server <- function(input, output, session) {
         paused(TRUE)
         hide("Pause")
         show("Unpause")
+    })
+    
+    output$Total<-renderUI({
+        h3(paste("Total Points:", round(sum(current_workout()$Points))))
     })
     
     observeEvent(input$Unpause, {
